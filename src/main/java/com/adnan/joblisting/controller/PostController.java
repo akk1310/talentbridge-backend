@@ -42,6 +42,7 @@ public class PostController {
 	@PostMapping("/posts/filter")
 	public PostPageResponse filterPosts(@RequestBody PostFilterRequest filter) {
 
+
 		boolean noFilters =
 		        (filter.getProfile() == null || filter.getProfile().isBlank()) &&
 		        (filter.getLocation() == null || filter.getLocation().isBlank()) &&
