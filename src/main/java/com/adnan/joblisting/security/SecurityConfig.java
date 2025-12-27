@@ -24,24 +24,24 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-            // ✅ CORS MUST be enabled here
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-
             .csrf(csrf -> csrf.disable())
 
             .authorizeHttpRequests(auth -> auth
-                // Public endpoints (NO JWT)
+                // 🔓 PUBLIC AUTH ENDPOINTS
                 .requestMatchers(
+                    "/auth/**",
                     "/candidate/login",
                     "/candidate/register",
-                    "/auth/**"
+                    "/employer/login",
+                    "/employer/register",
+                    "/employer/logout"
                 ).permitAll()
 
-                // Everything else requires JWT
+                // 🔒 EVERYTHING ELSE NEEDS JWT
                 .anyRequest().authenticated()
             )
 
-            // ✅ JWT AFTER CORS
             .addFilterBefore(
                 jwtAuthFilter,
                 UsernamePasswordAuthenticationFilter.class
@@ -50,7 +50,6 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // ✅ CORS config for Security layer
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
@@ -62,7 +61,7 @@ public class SecurityConfig {
             List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")
         );
         config.setAllowedHeaders(List.of("*"));
-        config.setAllowCredentials(true);
+        config.setAllowCredentials(false); // JWT in headers
 
         UrlBasedCorsConfigurationSource source =
             new UrlBasedCorsConfigurationSource();

@@ -55,6 +55,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 if (request.getRequestURI().startsWith("/employer")) {
                     request.setAttribute("employerId", subject);
                 }
+                
 
             } catch (Exception e) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
